@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Lénának – Napi jókívánság</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #ffe5f1, #f6f0ff 45%, #ffe0cc 90%);
+      color: #3b2a3f;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px 16px 32px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header-title {
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .header-subtitle {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    .date {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .scene {
+      position: relative;
+      height: 270px;
+      max-height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0 12px;
+      perspective: 1000px;
+    }
+
+    .envelope,
+    .card {
+      position: absolute;
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .envelope {
+      width: 260px;
+      height: 180px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #ffe1e8, #ffcfd9);
+      box-shadow:
+        0 14px 28px rgba(212, 123, 150, 0.35),
+        0 4px 10px rgba(255, 255, 255, 0.9) inset;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.8), transparent 45%),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255,126,167,0.65),
+          rgba(255,126,167,0.65) 8px,
+          rgba(255,255,255,0.6) 8px,
+          rgba(255,255,255,0.6) 16px
+        );
+      mix-blend-mode: soft-light;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .envelope-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 55%;
+      background: linear-gradient(145deg, #ffd7e3, #ffc1d2);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform 0.5s ease;
+      box-shadow: 0 10px 18px rgba(204, 112, 143, 0.35);
+    }
+
+    .envelope-label {
+      position: relative;
+      text-align: center;
+      padding: 10px 16px;
+      z-index: 1;
+    }
+
+    .label-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .label-date {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .label-hint {
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.3rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      width: 260px;
+      height: 180px;
+      border-radius: 18px;
+      background: #fffdf9;
+      box-shadow:
+        0 18px 32px rgba(191, 158, 134, 0.45),
+        0 0 0 1px rgba(255, 235, 220, 1);
+      padding: 18px 18px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+      transform: translateY(40px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at top left, #ffeef5, transparent 50%),
+        radial-gradient(circle at bottom right, #fff2de, transparent 55%),
+        #fffdf9;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-inner::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 10px;
+      border: 1px dashed rgba(216, 162, 140, 0.7);
+      pointer-events: none;
+    }
+
+    #message {
+      font-size: 0.98rem;
+      line-height: 1.35;
+      padding: 4px;
+      z-index: 1;
+    }
+
+    .corner-decor {
+      position: absolute;
+      font-size: 1.1rem;
+      opacity: 0.4;
+    }
+
+    .corner-decor.tl {
+      top: 6px;
+      left: 8px;
+    }
+    .corner-decor.br {
+      bottom: 6px;
+      right: 8px;
+    }
+
+    .scene.open .envelope {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-40px) scale(0.9) rotateX(20deg);
+    }
+
+    .scene.open .envelope-top {
+      transform: rotateX(160deg);
+    }
+
+    .scene.open .card {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 6px;
+    }
+
+    .hint span {
+      font-size: 1rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .envelope,
+      .card,
+      .envelope-top {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div class="header">
+      <div class="header-title">Lénának</div>
+      <div class="header-subtitle">Napi jókívánság-kártya</div>
+      <div class="date" id="date"></div>
+    </div>
+
+    <div class="scene closed" id="scene">
+      <!-- BORÍTÉK -->
+      <button class="envelope" id="envelope" type="button"
+              onclick="openCard()"
+              aria-label="Koppints a borítékra, hogy kinyisd a mai kártyát!">
+        <div class="envelope-top"></div>
+        <div class="envelope-label">
+          <div class="label-name">Lénának</div>
+          <div class="label-date" id="envelopeDate"></div>
+          <div class="label-hint">Koppints ide, hogy kinyisd a mai üzeneted 💌</div>
+        </div>
+        <div class="heart">♡</div>
+      </button>
+
+      <!-- KÁRTYA -->
+      <button class="card" id="card" type="button"
+              onclick="closeCard()"
+              aria-label="Koppints a kártyára, hogy visszakerüljön a borítékba!">
+        <div class="card-inner">
+          <div class="corner-decor tl">✿</div>
+          <p id="message"></p>
+          <div class="corner-decor br">✿</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="hint">
+      Minden nap új kártya vár rád <span>💌</span>
+    </div>
+  </div>
+
+  <script>
+    // ---- BEÁLLÍTÁSOK ----
+    const TIMEZONE = "Europe/Bucharest";     // Romániai időzóna
+    const STORAGE_KEY = "lena_daily_card_v1";
+    const HISTORY_KEY = "lena_daily_card_history_v1";
+    const NO_REPEAT_DAYS = 10;
+
+    const BIRTHDAY_MONTH = 5;  // május
+    const BIRTHDAY_DAY = 25;
+
+    const BIRTHDAY_MESSAGE = "Boldog Születésnapot! Minden álmod váljon valóra!";
+
+    // A többi napra vonatkozó üzenetek
+    const MESSAGES = [
+      "Nagyon értékes és különleges ember vagy, kiemelkedsz a sorból! ",
+      "Ha belenézel a tükörbe, akkor egy gyönyörű hölgy néz vissza rád! :)",
+      "A mosolyod a legszebb ékszered, vedd hát fel ma is! :)",
+      "Okos vagy: hamar meglátsz olyan összefüggéseket, amiket más nem!",
+      "Nagyon sokat fejlődtél az elmúlt években, büszke lehetsz magadra, csak így tovább!",
+      "Jó humorérzéked van! Nem is sejted hány ember napját tetted szebbé ezzel! :)"
+      // IDE tudsz majd további üzeneteket beszúrni vesszővel elválasztva
+    ];
+
+    // ---- IDŐZÓNA SZERINTI DÁTUM ----
+    function getTodayInBucharest() {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat("hu-HU", {
+        timeZone: TIMEZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(now);
+
+      let y, m, d;
+      for (const p of parts) {
+        if (p.type === "year") y = p.value;
+        if (p.type === "month") m = p.value;
+        if (p.type === "day") d = p.value;
+      }
+      return { year: Number(y), month: Number(m), day: Number(d) };
+    }
+
+    function dateKey(obj) {
+      const year = obj.year;
+      const month = obj.month;
+      const day = obj.day;
+      const mm = String(month).padStart(2, "0");
+      const dd = String(day).padStart(2, "0");
+      return year + "-" + mm + "-" + dd;
+    }
+
+    function formatHungarianDate(obj) {
+      const year = obj.year;
+      const month = obj.month;
+      const day = obj.day;
+      const dt = new Date(Date.UTC(year, month - 1, day));
+      return dt.toLocaleDateString("hu-HU", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: TIMEZONE
+      });
+    }
+
+    // ---- STORAGE SEGÉDFÜGGVÉNYEK ----
+    function loadStoredCard() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveStoredCard(data) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        // ha privát mód, ignoráljuk
+      }
+    }
+
+    function loadHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveHistory(history) {
+      try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      } catch (e) {
+        // ignoráljuk, ha nem engedi
+      }
+    }
+
+    // ---- KÁRTYA KISORSOLÁSA ----
+    function pickMessageIndexWithNoRepeat(history) {
+      var allIndices = [];
+      for (var i = 0; i < MESSAGES.length; i++) {
+        allIndices.push(i);
+      }
+
+      var disallowed = {};
+      for (var j = 0; j < history.length; j++) {
+        disallowed[history[j]] = true;
+      }
+
+      var candidates = [];
+      for (var k = 0; k < allIndices.length; k++) {
+        if (!disallowed[allIndices[k]]) {
+          candidates.push(allIndices[k]);
+        }
+      }
+
+      var pool = candidates.length > 0 ? candidates : allIndices;
+      var randomIndex = Math.floor(Math.random() * pool.length);
+      return pool[randomIndex];
+    }
+
+    function getMessageForToday(today) {
+      var key = dateKey(today);
+      var isBirthday = (today.month === BIRTHDAY_MONTH && today.day === BIRTHDAY_DAY);
+
+      if (isBirthday) {
+        var storedB = loadStoredCard();
+        if (!storedB || storedB.date !== key || !storedB.isBirthday) {
+          saveStoredCard({
+            date: key,
+            isBirthday: true,
+            messageType: "birthday",
+            index: null
+          });
+        }
+        return {
+          text: BIRTHDAY_MESSAGE,
+          isBirthday: true
+        };
+      }
+
+      var stored = loadStoredCard();
+      if (stored && stored.date === key && !stored.isBirthday && typeof stored.index === "number") {
+        return {
+          text: MESSAGES[stored.index],
+          isBirthday: false,
+          index: stored.index
+        };
+      }
+
+      var history = loadHistory();
+      var idx = pickMessageIndexWithNoRepeat(history);
+
+      saveStoredCard({
+        date: key,
+        isBirthday: false,
+        messageType: "normal",
+        index: idx
+      });
+
+      var newHistory = [idx].concat(history).slice(0, NO_REPEAT_DAYS);
+      saveHistory(newHistory);
+
+      return {
+        text: MESSAGES[idx],
+        isBirthday: false,
+        index: idx
+      };
+    }
+
+    // Ezeket hívják a HTML-beli onclick-ek
+    function openCard() {
+      var scene = document.getElementById("scene");
+      if (scene) {
+        scene.classList.add("open");
+      }
+    }
+
+    function closeCard() {
+      var scene = document.getElementById("scene");
+      if (scene) {
+        scene.classList.remove("open");
+      }
+    }
+
+    // ---- UI INIT ----
+    document.addEventListener("DOMContentLoaded", function () {
+      var today = getTodayInBucharest();
+
+      var dateEl = document.getElementById("date");
+      var envelopeDateEl = document.getElementById("envelopeDate");
+      var messageEl = document.getElementById("message");
+
+      var prettyDate = formatHungarianDate(today);
+      dateEl.textContent = prettyDate;
+      envelopeDateEl.textContent = prettyDate;
+
+      var msg = getMessageForToday(today);
+      messageEl.textContent = msg.text;
+    });
+  </script>
+</body>
+</html>
