@@ -191,26 +191,19 @@
       overflow: hidden;
     }
 
-    .card-inner::before {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border-radius: 10px;
-      border: 1px dashed rgba(216, 162, 140, 0.7);
-      pointer-events: none;
-    }
+    /* Szaggatott keret ELTÁVOLÍTVA – itt korábban ::before volt */
 
     #message {
-      font-size: 0.98rem;
-      line-height: 1.35;
+      font-size: 1rem;
+      line-height: 1.4;
       padding: 4px;
       z-index: 1;
     }
 
     .corner-decor {
       position: absolute;
-      font-size: 1.1rem;
-      opacity: 0.4;
+      font-size: 1.4rem; /* kicsit nagyobb */
+      opacity: 0.6;
     }
 
     .corner-decor.tl {
@@ -286,9 +279,9 @@
               onclick="closeCard()"
               aria-label="Koppints a kártyára, hogy visszakerüljön a borítékba!">
         <div class="card-inner">
-          <div class="corner-decor tl">✿</div>
+          <div class="corner-decor tl">🌹</div>
           <p id="message"></p>
-          <div class="corner-decor br">✿</div>
+          <div class="corner-decor br">🌹</div>
         </div>
       </button>
     </div>
@@ -301,8 +294,10 @@
   <script>
     // ---- BEÁLLÍTÁSOK ----
     const TIMEZONE = "Europe/Bucharest";     // Romániai időzóna
-    const STORAGE_KEY = "lena_daily_card_v1";
-    const HISTORY_KEY = "lena_daily_card_history_v1";
+
+    // ÚJ KULCSOK – ezzel "resetelődik" a randomizáció
+    const STORAGE_KEY = "lena_daily_card_v2";
+    const HISTORY_KEY = "lena_daily_card_history_v2";
     const NO_REPEAT_DAYS = 10;
 
     const BIRTHDAY_MONTH = 5;  // május
@@ -310,15 +305,20 @@
 
     const BIRTHDAY_MESSAGE = "Boldog Születésnapot! Minden álmod váljon valóra!";
 
-    // A többi napra vonatkozó üzenetek
+    // ÚJ ÜZENETLISTA
     const MESSAGES = [
-      "Nagyon értékes és különleges ember vagy, kiemelkedsz a sorból! ",
-      "Ha belenézel a tükörbe, akkor egy gyönyörű hölgy néz vissza rád! :)",
-      "A mosolyod a legszebb ékszered, vedd hát fel ma is! :)",
-      "Okos vagy: hamar meglátsz olyan összefüggéseket, amiket más nem!",
-      "Nagyon sokat fejlődtél az elmúlt években, büszke lehetsz magadra, csak így tovább!",
-      "Jó humorérzéked van! Nem is sejted hány ember napját tetted szebbé ezzel! :)"
-      // IDE tudsz majd további üzeneteket beszúrni vesszővel elválasztva
+      "Lepd meg magad egy apró gesztussal ma, megérdemled! ☺️",
+      "Tudd, hogy ritka különleges ember vagy. Kiemelkedsz a tömegből, főleg a szíveddel, humoroddal☺️",
+      "Ha belenézel a tükörbe, akkor egy gyönyörű hölgy néz vissza rád! 🫶",
+      "A mosolyod a legszebb ékszered, vedd hát fel ma is! 🫶",
+      "Okos hölgy vagy: hamar meglátsz olyan összefüggéseket, amiket más nem! 🧐",
+      "Nagyon sokat fejlődtél az elmúlt években, büszke lehetsz magadra, csak így tovább! 🙌",
+      "Ma egy szóviccet kapsz: miért nem látják Pált az erdőben? Mert pálmafa 🌴",
+      "Nem is sejted, hány lelket gyógyítottál meg a remek (és meglehetősen egyedi) humoroddal! 😂",
+      "A mai kártya egyenesen Puffancstól van: \"Szia Léna! Csak azt akarom mondani, hogy nagyon szeretlek!🧸\"",
+      "Remélem, hogy egyszer magad is elhiszed, hogy gyönyörű hölgy vagy☺️",
+      "A lábujjaid pont úgy tökéletesek, ahogy vannak (az orrod is). Sajnálom, hogy vicceltem vele!😂",
+      "Gyönyörű lelked van, ezt már bebizonyítottad. Bár több olyan ember lenne, mint te! 🫶"
     ];
 
     // ---- IDŐZÓNA SZERINTI DÁTUM ----
