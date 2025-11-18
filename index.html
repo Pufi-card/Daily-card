@@ -291,219 +291,220 @@
     </div>
   </div>
 
-  <script>
-    // ---- BEÁLLÍTÁSOK ----
-    const TIMEZONE = "Europe/Bucharest";     // Romániai időzóna
+<script>
+  // ---- BEÁLLÍTÁSOK ----
+  const TIMEZONE = "Europe/Bucharest";     // Romániai időzóna
 
-    // ÚJ KULCSOK – ezzel "resetelődik" a randomizáció
-    const STORAGE_KEY = "lena_daily_card_v5";
-    const HISTORY_KEY = "lena_daily_card_history_v5";
-    const NO_REPEAT_DAYS = 10;
+  // ÚJ KULCSOK – ezzel "resetelődik" a randomizáció
+  const STORAGE_KEY = "lena_daily_card_v5";
+  const HISTORY_KEY = "lena_daily_card_history_v5";
+  const NO_REPEAT_DAYS = 10;
 
-    const BIRTHDAY_MONTH = 5;  // május
-    const BIRTHDAY_DAY = 25;
+  const BIRTHDAY_MONTH = 5;  // május
+  const BIRTHDAY_DAY = 25;
 
-    const BIRTHDAY_MESSAGE = "Boldog Születésnapot! Minden álmod váljon valóra!";
+  const BIRTHDAY_MESSAGE = "Boldog Születésnapot! Minden álmod váljon valóra!";
 
-    // ÚJ ÜZENETLISTA
-    const MESSAGES = [
-      "Lepd meg magad egy apró gesztussal ma, megérdemled! ☺️",
-      "Tudd, hogy ritka különleges ember vagy. Kiemelkedsz a tömegből, főleg a szíveddel, humoroddal☺️",
-      "Ha belenézel a tükörbe, akkor egy gyönyörű hölgy néz vissza rád! 🫶",
-      "A mosolyod a legszebb ékszered, vedd hát fel ma is! 🫶",
-      "Okos hölgy vagy: hamar meglátsz olyan összefüggéseket, amiket más nem! 🧐",
-      "Nagyon sokat fejlődtél az elmúlt években, büszke lehetsz magadra, csak így tovább! 🙌",
-      "Ma egy szóviccet kapsz: miért nem látják Pált az erdőben? Mert pálmafa 🌴",
-      "Nem is sejted, hány lelket gyógyítottál meg a remek (és meglehetősen egyedi) humoroddal! 😂",
-      "A mai kártya egyenesen Puffancstól van: \"Szia Léna! Csak azt akarom mondani, hogy nagyon szeretlek!🧸\"",
-      "Remélem, hogy egyszer magad is elhiszed, hogy gyönyörű hölgy vagy☺️",
-      "A lábujjaid pont úgy tökéletesek, ahogy vannak (az orrod is). Sajnálom, hogy vicceltem vele!😂",
-      "Gyönyörű lelked van, ezt már bebizonyítottad. Bár több olyan ember lenne, mint te! 🫶"
-      "Rengeteget lehet tőled tanulni. A társaságod nem csak értékes, de fejlesztő is. ☺️"
-      "Mosoly-nap a mai, így hát egy vicc: hogyan kapta Nepál a nevét? \"Bármi legyen, csak ne Pál!\" 😂 "
-      "Nagyon jó édesanyja voltál Kormikától Steviekéig az összes kis cicádnak! Hálásak neked 🥺🫶 "
-      "Nagyon figyelmes vagy, érzelmileg érett és jószívű az elesettekkel. Maradj mindig ilyen 😇"
-      "Fantasztikus a memóriád (nem csak vitáknál): dalszövegek, versek, mondókák. Remek eszed van! ☺️ "
-      "Te vagy a legszebb arcú hölgy, akit eme app készítője valaha látott - őszintén. 🤍"
-    ];
+  // ÜZENETLISTA – minden sor végén van vessző, csak az utolsón nincs
+  const MESSAGES = [
+    'Lepd meg magad egy apró gesztussal ma, megérdemled! ☺️',
+    'Tudd, hogy ritka különleges ember vagy. Kiemelkedsz a tömegből, főleg a szíveddel, humoroddal☺️',
+    'Ha belenézel a tükörbe, akkor egy gyönyörű hölgy néz vissza rád! 🫶',
+    'A mosolyod a legszebb ékszered, vedd hát fel ma is! 🫶',
+    'Okos hölgy vagy: hamar meglátsz olyan összefüggéseket, amiket más nem! 🧐',
+    'Nagyon sokat fejlődtél az elmúlt években, büszke lehetsz magadra, csak így tovább! 🙌',
+    'Ma egy szóviccet kapsz: miért nem látják Pált az erdőben? Mert pálmafa 🌴',
+    'Nem is sejted, hány lelket gyógyítottál meg a remek (és meglehetősen egyedi) humoroddal! 😂',
+    'A mai kártya egyenesen Puffancstól van: "Szia Léna! Csak azt akarom mondani, hogy nagyon szeretlek!🧸"',
+    'Remélem, hogy egyszer magad is elhiszed, hogy gyönyörű hölgy vagy☺️',
+    'A lábujjaid pont úgy tökéletesek, ahogy vannak (az orrod is). Sajnálom, hogy vicceltem vele!😂',
+    'Gyönyörű lelked van, ezt már bebizonyítottad. Bár több olyan ember lenne, mint te! 🫶',
+    'Rengeteget lehet tőled tanulni. A társaságod nem csak értékes, de fejlesztő is. ☺️',
+    'Mosoly-nap a mai, így hát egy vicc: hogyan kapta Nepál a nevét? "Bármi legyen, csak ne Pál!" 😂',
+    'Nagyon jó édesanyja voltál Kormikától Steviekéig az összes kis cicádnak! Hálásak neked 🥺🫶',
+    'Nagyon figyelmes vagy, érzelmileg érett és jószívű az elesettekkel. Maradj mindig ilyen 😇',
+    'Fantasztikus a memóriád (nem csak vitáknál): dalszövegek, versek, mondókák. Remek eszed van! ☺️',
+    'Te vagy a legszebb arcú hölgy, akit eme app készítője valaha látott – őszintén. 🤍'
+  ];
 
-    // ---- IDŐZÓNA SZERINTI DÁTUM ----
-    function getTodayInBucharest() {
-      const now = new Date();
-      const parts = new Intl.DateTimeFormat("hu-HU", {
-        timeZone: TIMEZONE,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-      }).formatToParts(now);
+  // ---- IDŐZÓNA SZERINTI DÁTUM ----
+  function getTodayInBucharest() {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat("hu-HU", {
+      timeZone: TIMEZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(now);
 
-      let y, m, d;
-      for (const p of parts) {
-        if (p.type === "year") y = p.value;
-        if (p.type === "month") m = p.value;
-        if (p.type === "day") d = p.value;
-      }
-      return { year: Number(y), month: Number(m), day: Number(d) };
+    let y, m, d;
+    for (const p of parts) {
+      if (p.type === "year") y = p.value;
+      if (p.type === "month") m = p.value;
+      if (p.type === "day") d = p.value;
+    }
+    return { year: Number(y), month: Number(m), day: Number(d) };
+  }
+
+  function dateKey(obj) {
+    const year = obj.year;
+    const month = obj.month;
+    const day = obj.day;
+    const mm = String(month).padStart(2, "0");
+    const dd = String(day).padStart(2, "0");
+    return year + "-" + mm + "-" + dd;
+  }
+
+  function formatHungarianDate(obj) {
+    const year = obj.year;
+    const month = obj.month;
+    const day = obj.day;
+    const dt = new Date(Date.UTC(year, month - 1, day));
+    return dt.toLocaleDateString("hu-HU", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: TIMEZONE
+    });
+  }
+
+  // ---- STORAGE SEGÉDFÜGGVÉNYEK ----
+  function loadStoredCard() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveStoredCard(data) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+      // ha privát mód, ignoráljuk
+    }
+  }
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHistory(history) {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (e) {
+      // ignoráljuk, ha nem engedi
+    }
+  }
+
+  // ---- KÁRTYA KISORSOLÁSA ----
+  function pickMessageIndexWithNoRepeat(history) {
+    var allIndices = [];
+    for (var i = 0; i < MESSAGES.length; i++) {
+      allIndices.push(i);
     }
 
-    function dateKey(obj) {
-      const year = obj.year;
-      const month = obj.month;
-      const day = obj.day;
-      const mm = String(month).padStart(2, "0");
-      const dd = String(day).padStart(2, "0");
-      return year + "-" + mm + "-" + dd;
+    var disallowed = {};
+    for (var j = 0; j < history.length; j++) {
+      disallowed[history[j]] = true;
     }
 
-    function formatHungarianDate(obj) {
-      const year = obj.year;
-      const month = obj.month;
-      const day = obj.day;
-      const dt = new Date(Date.UTC(year, month - 1, day));
-      return dt.toLocaleDateString("hu-HU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: TIMEZONE
-      });
-    }
-
-    // ---- STORAGE SEGÉDFÜGGVÉNYEK ----
-    function loadStoredCard() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
-      } catch (e) {
-        return null;
+    var candidates = [];
+    for (var k = 0; k < allIndices.length; k++) {
+      if (!disallowed[allIndices[k]]) {
+        candidates.push(allIndices[k]);
       }
     }
 
-    function saveStoredCard(data) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      } catch (e) {
-        // ha privát mód, ignoráljuk
+    var pool = candidates.length > 0 ? candidates : allIndices;
+    var randomIndex = Math.floor(Math.random() * pool.length);
+    return pool[randomIndex];
+  }
+
+  function getMessageForToday(today) {
+    var key = dateKey(today);
+    var isBirthday = (today.month === BIRTHDAY_MONTH && today.day === BIRTHDAY_DAY);
+
+    if (isBirthday) {
+      var storedB = loadStoredCard();
+      if (!storedB || storedB.date !== key || !storedB.isBirthday) {
+        saveStoredCard({
+          date: key,
+          isBirthday: true,
+          messageType: "birthday",
+          index: null
+        });
       }
-    }
-
-    function loadHistory() {
-      try {
-        return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function saveHistory(history) {
-      try {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-      } catch (e) {
-        // ignoráljuk, ha nem engedi
-      }
-    }
-
-    // ---- KÁRTYA KISORSOLÁSA ----
-    function pickMessageIndexWithNoRepeat(history) {
-      var allIndices = [];
-      for (var i = 0; i < MESSAGES.length; i++) {
-        allIndices.push(i);
-      }
-
-      var disallowed = {};
-      for (var j = 0; j < history.length; j++) {
-        disallowed[history[j]] = true;
-      }
-
-      var candidates = [];
-      for (var k = 0; k < allIndices.length; k++) {
-        if (!disallowed[allIndices[k]]) {
-          candidates.push(allIndices[k]);
-        }
-      }
-
-      var pool = candidates.length > 0 ? candidates : allIndices;
-      var randomIndex = Math.floor(Math.random() * pool.length);
-      return pool[randomIndex];
-    }
-
-    function getMessageForToday(today) {
-      var key = dateKey(today);
-      var isBirthday = (today.month === BIRTHDAY_MONTH && today.day === BIRTHDAY_DAY);
-
-      if (isBirthday) {
-        var storedB = loadStoredCard();
-        if (!storedB || storedB.date !== key || !storedB.isBirthday) {
-          saveStoredCard({
-            date: key,
-            isBirthday: true,
-            messageType: "birthday",
-            index: null
-          });
-        }
-        return {
-          text: BIRTHDAY_MESSAGE,
-          isBirthday: true
-        };
-      }
-
-      var stored = loadStoredCard();
-      if (stored && stored.date === key && !stored.isBirthday && typeof stored.index === "number") {
-        return {
-          text: MESSAGES[stored.index],
-          isBirthday: false,
-          index: stored.index
-        };
-      }
-
-      var history = loadHistory();
-      var idx = pickMessageIndexWithNoRepeat(history);
-
-      saveStoredCard({
-        date: key,
-        isBirthday: false,
-        messageType: "normal",
-        index: idx
-      });
-
-      var newHistory = [idx].concat(history).slice(0, NO_REPEAT_DAYS);
-      saveHistory(newHistory);
-
       return {
-        text: MESSAGES[idx],
-        isBirthday: false,
-        index: idx
+        text: BIRTHDAY_MESSAGE,
+        isBirthday: true
       };
     }
 
-    // Ezeket hívják a HTML-beli onclick-ek
-    function openCard() {
-      var scene = document.getElementById("scene");
-      if (scene) {
-        scene.classList.add("open");
-      }
+    var stored = loadStoredCard();
+    if (stored && stored.date === key && !stored.isBirthday && typeof stored.index === "number") {
+      return {
+        text: MESSAGES[stored.index],
+        isBirthday: false,
+        index: stored.index
+      };
     }
 
-    function closeCard() {
-      var scene = document.getElementById("scene");
-      if (scene) {
-        scene.classList.remove("open");
-      }
-    }
+    var history = loadHistory();
+    var idx = pickMessageIndexWithNoRepeat(history);
 
-    // ---- UI INIT ----
-    document.addEventListener("DOMContentLoaded", function () {
-      var today = getTodayInBucharest();
-
-      var dateEl = document.getElementById("date");
-      var envelopeDateEl = document.getElementById("envelopeDate");
-      var messageEl = document.getElementById("message");
-
-      var prettyDate = formatHungarianDate(today);
-      dateEl.textContent = prettyDate;
-      envelopeDateEl.textContent = prettyDate;
-
-      var msg = getMessageForToday(today);
-      messageEl.textContent = msg.text;
+    saveStoredCard({
+      date: key,
+      isBirthday: false,
+      messageType: "normal",
+      index: idx
     });
-  </script>
+
+    var newHistory = [idx].concat(history).slice(0, NO_REPEAT_DAYS);
+    saveHistory(newHistory);
+
+    return {
+      text: MESSAGES[idx],
+      isBirthday: false,
+      index: idx
+    };
+  }
+
+  // Ezeket hívják a HTML-beli onclick-ek
+  function openCard() {
+    var scene = document.getElementById("scene");
+    if (scene) {
+      scene.classList.add("open");
+    }
+  }
+
+  function closeCard() {
+    var scene = document.getElementById("scene");
+    if (scene) {
+      scene.classList.remove("open");
+    }
+  }
+
+  // ---- UI INIT ----
+  document.addEventListener("DOMContentLoaded", function () {
+    var today = getTodayInBucharest();
+
+    var dateEl = document.getElementById("date");
+    var envelopeDateEl = document.getElementById("envelopeDate");
+    var messageEl = document.getElementById("message");
+
+    var prettyDate = formatHungarianDate(today);
+    dateEl.textContent = prettyDate;
+    envelopeDateEl.textContent = prettyDate;
+
+    var msg = getMessageForToday(today);
+    messageEl.textContent = msg.text;
+  });
+</script>
+
 </body>
 </html>
